@@ -24,6 +24,35 @@ module.exports = (app, utils) => {
     return next()
   })
 
+  /**
+   * Middleware for redirecting "Special:Search" URLs to "/wiki/" format.
+   */
+  app.get('/w/index.php', (req, res, next) => {
+    const { search, go, title } = req.query;
+
+    // Check if the query matches a "Special:Search" request with the "Go" parameter
+    if (go === 'Go' && title === 'Special:Search' && search) {
+      const formattedSearch = search.replace(/\s+/g, '_'); // Replace spaces with underscores
+      const redirectUrl = `/wiki/${formattedSearch}`;
+      return res.redirect(301, redirectUrl); // Redirect permanently
+    }
+
+    next(); // Continue to the next middleware if conditions aren't met
+  });
+
+  /**
+   * Route for handling Wiki page requests.
+   */
+  app.get('/wiki/:title', async (req, res) => {
+    const { title } = req.params;
+    try {
+      const pageContent = await fetchWikipediaPage(title);
+      res.send(pageContent); // Send fetched content as the response
+    } catch (error) {
+      res.status(500).send('Error fetching page.');
+    }
+  });
+
   app.get('*', async (req, res, next) => {
     if(req.url.startsWith('/w/load.php')) {
       return res.sendStatus(404)
