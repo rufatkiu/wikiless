@@ -15,7 +15,7 @@ const config = {
   * but they are not supported anymore.
   * process.env.REDIS_HOST is still here for backwards compatibility.
   */
-  redis_url: process.env.REDIS_URL || process.env.REDIS_HOST || 'wikiless_redis',
+  redis_url: process.env.REDIS_URL || process.env.REDIS_HOST || 'redis://default:rsTlchM4MfzpNHwh6APnAtUpasVYPxigg6dbDjxqpTJ77prgadyZQh5c1dKEQqn4@sw8cw4kgwwcg8kcko0o44sk4:6379/0',
   redis_password: process.env.REDIS_PASSWORD,
   
   /**
