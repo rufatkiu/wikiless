@@ -114,14 +114,11 @@ module.exports = (app, utils) => {
   })
 
   app.get('/wiki/:page?/:sub_page?', (req, res, next) => {
-    return handleWikiPage(req, res, '/wiki/')
-  })
-
-  app.get('/wiki//:page?/:sub_page?', (req, res, next) => {
-    const page = req.params.page
-    if(page) {
-      // issue #25
-      req.params.page = `/${req.params.page}`
+    const pageName = req.params.page;
+    if (pageName && pageName.startsWith('File:')) {
+        const encodedFileName = encodeURIComponent(pageName.split(':')[1])
+        const mediaPath = `/media/wikipedia/commons/thumb/${encodedFileName}`
+        return res.redirect(mediaPath)
     }
     return handleWikiPage(req, res, '/wiki/')
   })
